@@ -6,4 +6,4 @@ Meta-Layer for "Decentralized Physical Infrastructure Networks (DePIN)" and "Dec
 
 **Forum**
 
-https://discord.gg/bf3PwSJK
+https://discord.gg/3CEcMa9wex
