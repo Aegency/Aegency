@@ -17,62 +17,61 @@ https://github.com/Aegency/Aegency/wiki
 ## Diagram
 
 ``` mermaid
-graph TD
-    %% Node Styling
-    classDef client fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef agent fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
-    classDef infra fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+graph BT
+    %% STYLING
+    classDef client fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    classDef netAgent fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    classDef db fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
     classDef compliance fill:#ffebee,stroke:#c62828,stroke-width:2px,stroke-dasharray: 5 5;
-
-    %% --- CLIENT SIDE ---
-    User((User / Client)):::client
-    ClientAgent[Client Agent<br/><i>The Orchestrator</i>]:::client
-
-    %% --- THE NETWORK ---
-    subgraph "Web3 Meta Network"
+	
+	
+    %% USER SPACE
+	User((User)):::client
+	CA[Client Agent<br/><i>Sovereign Orchestrator</i>]:::client
+	
+	
+    %% SHARED NETWORK SPACE
+    subgraph "Shared Web3"
         direction TB
-        
-        %% Core Agents
-        NetAgent[Network Agent<br/><i>Worker / Executor</i>]:::agent
-        
-        %% Infrastructure Nodes
-        Reg[Registry Node<br/><i>Address Book</i>]:::infra
-        ID[Identity Node<br/><i>DID & Credentials</i>]:::infra
-        State[State Node<br/><i>World Knowledge / Graph DB</i>]:::infra
-        Rep[Reputation Node<br/><i>Trust Scores</i>]:::infra
-        Store[Storage Node<br/><i>Payload Data</i>]:::infra
-        
-        %% Compliance Logic (Virtual)
-        Comp{Compliance<br/>Check}:::compliance
+		
+        AN[Agent Node<br/><i>Indipendend Agent</i>]:::netAgent
+        Exec[Execution Node<br/><i>Compute / Script</i>]:::netAgent
+        Data[Data Node<br/><i>Public & Private Data</i>]:::db
+        Rep[Reputation Node<br/><i>Quality Control</i>]:::db
+        Reg[Registry Node<br/><i>Service Discovery</i>]:::db
+        State[State Node<br/><i>World Knowledge Graph</i>]:::db
+        Store[Storage Node<br/><i>Public & Private Data</i>]:::db
+        ID[Identity Node<br/><i>DID</i>]:::db
     end
-
-    %% --- FLOWS / EDGES ---
-
-    %% 1. User Intent
-    User -->|1. Define Goal| ClientAgent
-
-    %% 2. Discovery & Setup
-    ClientAgent -->|2. Lookup Service| Reg
-    Reg -.->|Returns Address| ClientAgent
+	
+	
+    %% CONNECTIONS
+    AN -->|Find Services| Reg
+    AN -.->|Rate Service| Rep
+    AN -->|Read/Write| Data
+    AN -->|Read/Write| State
+    AN -->|Read/Write| Store
+    AN -->|Result| CA
+    AN -->|Run| Exec
+    AN -->|Verify Identity| ID
     
-    %% 3. Workflow Delegation
-    ClientAgent == "3. Send Workflow (Intent)" ==> NetAgent
-
-    %% 4. Authentication & Compliance loop
-    NetAgent -->|4. Auth & Verify| ID
-    ID -.->|Valid/Invalid| Comp
-    Comp -->|5. Gatekeeper| NetAgent
-
-    %% 5. Execution Context
-    NetAgent <-->|6. Read/Write Knowledge| State
-    NetAgent -->|7. Store Results| Store
-
-    %% 6. Feedback Loop
-    NetAgent --"8. Rate Interaction"--> Rep
-    ClientAgent --"9. Rate Network Agent"--> Rep
-    Rep -.->|Updates Score| Reg
-
-    %% Legende für Edges
-    %% linkStyle default stroke-width:1px,fill:none,stroke:#333;
-    %% linkStyle 2 stroke-width:3px,stroke:#0277bd; %% Workflow line thicker
+    CA ==>|Delegation| AN
+    CA -->|Find Services| Reg
+    CA -.->|Rate Service| Rep
+    CA -->|Read/Write| Data
+    CA -->|Read/Write| State
+    CA -->|Read/Write| Store
+    CA -->|Run| Exec
+    CA -->|Verify Identity| ID
+    
+    Exec-->|Result| AN
+    Exec-->|Result| CA
+    
+    Rep -.->|Feed Score| Reg
+	
+    User -->|Prompt| CA
+	
+    %% Legende
+    linkStyle default stroke-width:1px,stroke:#333,fill:none;
+    linkStyle 4 stroke:#1565c0,stroke-width:3px;
 ```
