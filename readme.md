@@ -46,7 +46,7 @@ graph BT
 	
 	
     %% CONNECTIONS
-    AN -->|Find Services| Reg
+    AN -->|Read| Reg
     AN -.->|Rate Service| Rep
     AN -->|Read/Write| Data
     AN -->|Read/Write| State
@@ -56,7 +56,8 @@ graph BT
     AN -->|Verify Identity| ID
     
     CA ==>|Delegation| AN
-    CA -->|Find Services| Reg
+    CA -->|Read| Reg
+    CA -->|Present| User
     CA -.->|Rate Service| Rep
     CA -->|Read/Write| Data
     CA -->|Read/Write| State
